@@ -1,8 +1,7 @@
-import 'package:flutter/foundation.dart';
 import '../models/city.dart';
 import 'tsp_algorithms.dart'; // Importa os algoritmos
 
-/// ✅ Função de nível superior para ser usada com `compute()`
+///  Função de nível superior para ser usada com `compute()`
 Future<List<City>> computeTSP(List<dynamic> args) async {
   String algorithm = args[0];
   List<City> cities = args[1];

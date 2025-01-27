@@ -4,8 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:tsp_travelling_salesman_problem_app/utils/tsp_compute.dart';
 import '../models/city.dart';
-import '../utils/tsp_algorithms.dart';
-import 'dart:isolate';
 
 class TspManager extends ChangeNotifier {
   List<City> cities = [];
@@ -16,18 +14,19 @@ class TspManager extends ChangeNotifier {
   String _selectedAlgorithm = 'Guloso';
   double _executionTime = 0.0;
 
-  double get executionTime => _executionTime; // Getter para UI
+  double get executionTime => _executionTime;
 
   GoogleMapController? _mapController;
 
   String get selectedAlgorithm => _selectedAlgorithm;
+
   void onMapCreated(GoogleMapController controller) {
     _mapController = controller;
   }
 
   set selectedAlgorithm(String algorithm) {
     _selectedAlgorithm = algorithm;
-    notifyListeners(); //  Garante que o estado seja atualizado
+    notifyListeners();
   }
 
   void generateCities(int count) {
@@ -39,26 +38,10 @@ class TspManager extends ChangeNotifier {
               position: LatLng(city.x, city.y),
             ))
         .toSet();
+
     solveTSP(selectedAlgorithm);
     notifyListeners();
   }
-
-/* //  Função para executar os algoritmos em um Isolate
-  Future<List<City>> _computeTSP(List<dynamic> args) async {
-    String algorithm = args[0];
-    List<City> cities = args[1];
-
-    switch (algorithm) {
-      case 'Guloso':
-        return nearestNeighbor(cities);
-      case 'Força Bruta':
-        return bruteForceTSP(cities);
-      case 'Simulated Annealing':
-        return simulatedAnnealing(cities);
-      default:
-        return [];
-    }
-  } */
 
   Future<void> solveTSP(String algorithm) async {
     selectedAlgorithm = algorithm;
@@ -69,61 +52,38 @@ class TspManager extends ChangeNotifier {
 
     bestPath = await compute(computeTSP, [algorithm, cities]);
 
-    _executionTime = stopwatch.elapsedMilliseconds.toDouble(); // ⏱️ Salva tempo
+    _executionTime = stopwatch.elapsedMilliseconds.toDouble();
 
-    updatePathPolyline();
+    await animateAndDrawPath();
     isProcessing = false;
     notifyListeners();
   }
-/*   Future<void> solveTSP(String algorithm) async {
-    selectedAlgorithm = algorithm; //  Atualiza o estado antes de processar
 
-    isProcessing = true;
-    notifyListeners();
-
-    final stopwatch = Stopwatch()..start();
-
-    switch (algorithm) {
-      case 'Guloso':
-        bestPath = nearestNeighbor(cities);
-        break;
-      case 'Força Bruta':
-        bestPath = bruteForceTSP(cities);
-        break;
-      case 'Simulated Annealing':
-        bestPath = simulatedAnnealing(cities);
-        break;
-    }
-
-    _executionTime = stopwatch.elapsedMilliseconds.toDouble(); //  Salva o tempo
-
-    updatePathPolyline();
-    isProcessing = false;
-    notifyListeners();
-  } */
-
-  void updatePathPolyline() {
-    bestPathPolyline = {
-      Polyline(
-        polylineId: const PolylineId("best_path"),
-        color: Colors.blue,
-        width: 4,
-        points: bestPath.map((c) => LatLng(c.x, c.y)).toList(),
-      ),
-    };
-    notifyListeners();
-  }
-
-  void animatePath() async {
+  ///  **Anima e desenha gradualmente a linha do caminho no mapa**
+  Future<void> animateAndDrawPath() async {
     if (bestPath.isEmpty || _mapController == null) return;
 
+    List<LatLng> animatedPath = [];
     for (int i = 0; i < bestPath.length; i++) {
+      animatedPath.add(LatLng(bestPath[i].x, bestPath[i].y));
+
+      bestPathPolyline = {
+        Polyline(
+          polylineId: const PolylineId("best_path"),
+          color: Colors.blue,
+          width: 4,
+          points: List.from(animatedPath), //  Atualiza gradualmente
+        ),
+      };
+
+      notifyListeners();
+
       _mapController!.animateCamera(
         CameraUpdate.newLatLng(LatLng(bestPath[i].x, bestPath[i].y)),
       );
+
       await Future.delayed(
-          const Duration(milliseconds: 500)); // Delay para animação
-      notifyListeners();
+          const Duration(milliseconds: 300)); //  Delay para animação
     }
   }
 

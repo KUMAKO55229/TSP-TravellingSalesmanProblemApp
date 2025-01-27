@@ -27,9 +27,9 @@ class TspScreen extends StatelessWidget {
                     zoom: 4,
                   ),
                   markers: tspProvider
-                      .cityMarkers, // 🔥 Atualiza automaticamente os marcadores
+                      .cityMarkers, //  Atualiza automaticamente os marcadores
                   polylines: tspProvider
-                      .bestPathPolyline, // 🔥 Atualiza a rota automaticamente
+                      .bestPathPolyline, // Atualiza a rota automaticamente
                   onMapCreated: tspProvider.onMapCreated,
                 );
               },
@@ -51,11 +51,6 @@ class TspScreen extends StatelessWidget {
               return Text(
                   "Tempo de execução: ${tspProvider.executionTime.toStringAsFixed(2)} ms");
             },
-          ),
-          ElevatedButton(
-            onPressed: () =>
-                Provider.of<TspManager>(context, listen: false).animatePath(),
-            child: const Text('Animar Caminho'),
           ),
         ],
       ),
