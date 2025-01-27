@@ -1,4 +1,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <!--  Permissões necessárias para Google Maps e Localização -->
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
     <application
         android:label="tsp_travelling_salesman_problem_app"
         android:name="${applicationName}"
@@ -6,8 +10,13 @@
       
         android:enableOnBackInvokedCallback="true"
         android:allowBackup="true"
+        android:usesCleartextTraffic="true"
+        android:requestLegacyExternalStorage="true"
         >
-        
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyASTVzebO0KquT8UD2Jppf7aS2-bfTbl5o" />
         <activity
             android:name=".MainActivity"
             android:exported="true"
@@ -27,7 +36,7 @@
               />
             <meta-data android:name="meow.disable" android:value="true"/>
             <meta-data android:name="flutter.renderer" android:value="skia"/>
-
+          
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
