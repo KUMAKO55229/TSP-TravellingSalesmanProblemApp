@@ -32,7 +32,7 @@ class TspScreen extends StatelessWidget {
             builder: (context, tspProvider, child) {
               return DropdownButton<String>(
                 value: tspProvider.selectedAlgorithm,
-                items: ['Guloso', 'Força Bruta', 'Simulated Annealing']
+                items: ['Guloso', 'Simulated Annealing']
                     .map((e) => DropdownMenuItem(value: e, child: Text(e)))
                     .toList(),
                 onChanged: (alg) => tspProvider.solveTSP(alg!),
