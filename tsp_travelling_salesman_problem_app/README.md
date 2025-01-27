@@ -1,16 +1,40 @@
 # tsp_travelling_salesman_problem_app
 
-A new Flutter project.
+📌 Projeto 2: Problema do Caixeiro Viajante (TSP)
+📖 Descrição
+Este projeto implementa soluções para o Problema do Caixeiro Viajante (TSP) utilizando diferentes algoritmos. A aplicação permite gerar cidades aleatórias e visualizar a rota otimizada para visitá-las utilizando um mapa interativo do Google Maps.
 
-## Getting Started
+📂 Estrutura do Projeto
+bash
+Copiar
+Editar
+TSP-App/
+│── lib/
+│   │── screens/   # Interface com o usuário
+│   │── managers/  # Controle do estado (Provider)
+│   │── models/    # Modelos de dados (Cidade)
+│   │── utils/     # Algoritmos e funções auxiliares
+│   │── tsp_compute.dart  # Processamento paralelo dos algoritmos
+│── android/
+│── ios/
+│── main.dart      # Arquivo principal
+│── pubspec.yaml   # Dependências do Flutter
+│── README.md
+🛠 Tecnologias Utilizadas
+-Flutter (Dart)
+-Google Maps API para renderização do mapa
+-Provider para gerenciamento de estado
+-Isolates e Compute para processamento paralelo
 
-This project is a starting point for a Flutter application.
+🔧 Como Executar
+Instale as dependências do Flutter:
+flutter pub get
+Configure a chave da API do Google Maps no AndroidManifest.xml:
 
-A few resources to get you started if this is your first Flutter project:
+<meta-data
+    android:name="com.google.android.geo.API_KEY"
+    android:value="SUA_CHAVE_AQUI" />
+    
+Execute o projeto em um emulador ou dispositivo:
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+flutter run
