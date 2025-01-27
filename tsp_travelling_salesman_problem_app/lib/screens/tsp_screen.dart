@@ -9,31 +9,24 @@ class TspScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Caixeiro Viajante')),
+      appBar: AppBar(
+        title: const Text('Bem vindo Franck!'),
+        centerTitle: true,
+      ),
       body: Column(
         children: [
+          Text(
+            "Quais cidades você gostaria de visitar hoje?",
+            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+          ),
           ElevatedButton(
             onPressed: () => Provider.of<TspManager>(context, listen: false)
-                .generateCities(10),
+                .generateCities(20),
             child: const Text('Gerar Cidades'),
           ),
-          Expanded(
-            child: Consumer<TspManager>(
-              builder: (context, tspProvider, child) {
-                return GoogleMap(
-                  initialCameraPosition: CameraPosition(
-                    target: LatLng(
-                        -23.55052, -46.633308), // Posição inicial (São Paulo)
-                    zoom: 4,
-                  ),
-                  markers: tspProvider
-                      .cityMarkers, //  Atualiza automaticamente os marcadores
-                  polylines: tspProvider
-                      .bestPathPolyline, // Atualiza a rota automaticamente
-                  onMapCreated: tspProvider.onMapCreated,
-                );
-              },
-            ),
+          Text(
+            "Qual algoritmo deseja usar? ",
+            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
           ),
           Consumer<TspManager>(
             builder: (context, tspProvider, child) {
@@ -46,10 +39,32 @@ class TspScreen extends StatelessWidget {
               );
             },
           ),
+          Expanded(
+            child: Consumer<TspManager>(
+              builder: (context, tspProvider, child) {
+                return GoogleMap(
+                  initialCameraPosition: CameraPosition(
+                    target: LatLng(
+                        -23.55052, -48.3317), // Posição inicial (São Paulo)
+                    zoom: 5,
+                  ),
+                  markers: tspProvider
+                      .cityMarkers, //  Atualiza automaticamente os marcadores
+                  polylines: tspProvider
+                      .bestPathPolyline, // Atualiza a rota automaticamente
+                  onMapCreated: tspProvider.onMapCreated,
+                );
+              },
+            ),
+          ),
           Consumer<TspManager>(
             builder: (context, tspProvider, child) {
-              return Text(
-                  "Tempo de execução: ${tspProvider.executionTime.toStringAsFixed(2)} ms");
+              if (!tspProvider.hasAnimationFinished) {
+                return SizedBox.shrink();
+              } else {
+                return Text(
+                    "Tempo de execução: ${tspProvider.executionTime.toStringAsFixed(2)} ms");
+              }
             },
           ),
         ],

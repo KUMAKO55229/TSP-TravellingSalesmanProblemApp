@@ -13,7 +13,7 @@ class TspManager extends ChangeNotifier {
   bool isProcessing = false;
   String _selectedAlgorithm = 'Guloso';
   double _executionTime = 0.0;
-
+  bool hasAnimationFinished = false;
   double get executionTime => _executionTime;
 
   GoogleMapController? _mapController;
@@ -44,6 +44,7 @@ class TspManager extends ChangeNotifier {
   }
 
   Future<void> solveTSP(String algorithm) async {
+    hasAnimationFinished = false;
     selectedAlgorithm = algorithm;
     isProcessing = true;
     notifyListeners();
@@ -56,6 +57,7 @@ class TspManager extends ChangeNotifier {
 
     await animateAndDrawPath();
     isProcessing = false;
+    hasAnimationFinished = true;
     notifyListeners();
   }
 

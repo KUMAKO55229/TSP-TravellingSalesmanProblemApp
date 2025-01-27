@@ -1,5 +1,5 @@
 import '../models/city.dart';
-import 'tsp_algorithms.dart'; // Importa os algoritmos
+import 'tsp_algorithms.dart';
 
 ///  Função de nível superior para ser usada com `compute()`
 Future<List<City>> computeTSP(List<dynamic> args) async {
