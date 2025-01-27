@@ -1,8 +1,11 @@
 import 'dart:math';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:tsp_travelling_salesman_problem_app/utils/tsp_compute.dart';
 import '../models/city.dart';
 import '../utils/tsp_algorithms.dart';
+import 'dart:isolate';
 
 class TspManager extends ChangeNotifier {
   List<City> cities = [];
@@ -40,7 +43,39 @@ class TspManager extends ChangeNotifier {
     notifyListeners();
   }
 
+/* //  Função para executar os algoritmos em um Isolate
+  Future<List<City>> _computeTSP(List<dynamic> args) async {
+    String algorithm = args[0];
+    List<City> cities = args[1];
+
+    switch (algorithm) {
+      case 'Guloso':
+        return nearestNeighbor(cities);
+      case 'Força Bruta':
+        return bruteForceTSP(cities);
+      case 'Simulated Annealing':
+        return simulatedAnnealing(cities);
+      default:
+        return [];
+    }
+  } */
+
   Future<void> solveTSP(String algorithm) async {
+    selectedAlgorithm = algorithm;
+    isProcessing = true;
+    notifyListeners();
+
+    final stopwatch = Stopwatch()..start();
+
+    bestPath = await compute(computeTSP, [algorithm, cities]);
+
+    _executionTime = stopwatch.elapsedMilliseconds.toDouble(); // ⏱️ Salva tempo
+
+    updatePathPolyline();
+    isProcessing = false;
+    notifyListeners();
+  }
+/*   Future<void> solveTSP(String algorithm) async {
     selectedAlgorithm = algorithm; //  Atualiza o estado antes de processar
 
     isProcessing = true;
@@ -65,7 +100,7 @@ class TspManager extends ChangeNotifier {
     updatePathPolyline();
     isProcessing = false;
     notifyListeners();
-  }
+  } */
 
   void updatePathPolyline() {
     bestPathPolyline = {
